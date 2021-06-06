@@ -3,6 +3,8 @@ plugins {
 }
 
 android {
+    apply from: 'git-version.gradle'
+
     compileSdkVersion 30
     buildToolsVersion "30.0.3"
 
@@ -10,8 +12,8 @@ android {
         applicationId "com.novang.hopae.moderator"
         minSdkVersion 23
         targetSdkVersion 30
-        versionCode 1
-        versionName "1.0"
+        versionCode gitVersion
+        versionName gitTag
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

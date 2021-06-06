@@ -1,0 +1,4 @@
+ext {
+    gitTag = "git describe --tags --abbrev=0".execute().text.trim().toString()
+    gitVersion = "git rev-list --count ".concat(gitTag).execute().text.trim().toInteger()
+}
