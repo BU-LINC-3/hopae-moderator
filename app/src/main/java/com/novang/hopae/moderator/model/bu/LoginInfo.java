@@ -5,18 +5,57 @@ import com.google.gson.annotations.SerializedName;
 public class LoginInfo {
 
     @SerializedName("isLogined")
-    public boolean isLogined;
+    private boolean isLogined;
 
     @SerializedName("userId")
-    public String userId;
+    private String userId;
 
     @SerializedName("univCd")
-    public String univCode;
+    private String univCode;
 
     @SerializedName("userNm")
-    public String userName;
+    private String userName;
 
     @SerializedName("deptCode")
-    public String deptCode;
+    private String deptCode;
 
+    public boolean isLogined() {
+        return isLogined;
+    }
+
+    public void setLogined(boolean logined) {
+        isLogined = logined;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public String getUnivCode() {
+        return univCode;
+    }
+
+    public void setUnivCode(String univCode) {
+        this.univCode = univCode;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getDeptCode() {
+        return deptCode;
+    }
+
+    public void setDeptCode(String deptCode) {
+        this.deptCode = deptCode;
+    }
 }

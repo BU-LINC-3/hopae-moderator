@@ -5,6 +5,13 @@ import com.google.gson.annotations.SerializedName;
 public class RevokeCredentialResponse {
 
     @SerializedName("revoked")
-    public boolean revoked;
+    private boolean revoked;
 
+    public boolean isRevoked() {
+        return revoked;
+    }
+
+    public void setRevoked(boolean revoked) {
+        this.revoked = revoked;
+    }
 }

@@ -7,27 +7,90 @@ import java.util.List;
 public class ConnectionInvitation {
 
     @SerializedName("@id")
-    public String id;
+    private String id;
 
     @SerializedName("@type")
-    public String type;
+    private String type;
 
     @SerializedName("did")
-    public String did;
+    private String did;
 
     @SerializedName("imageUrl")
-    public String imageUrl;
+    private String imageUrl;
 
     @SerializedName("label")
-    public String label;
+    private String label;
 
     @SerializedName("recipientKeys")
-    public List<String> recipientKeys;
+    private List<String> recipientKeys;
 
     @SerializedName("routingKeys")
-    public List<String> routingKeys;
+    private List<String> routingKeys;
 
     @SerializedName("serviceEndpoint")
-    public String serviceEndPoint;
+    private String serviceEndPoint;
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getDid() {
+        return did;
+    }
+
+    public void setDid(String did) {
+        this.did = did;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
+    }
+
+    public List<String> getRecipientKeys() {
+        return recipientKeys;
+    }
+
+    public void setRecipientKeys(List<String> recipientKeys) {
+        this.recipientKeys = recipientKeys;
+    }
+
+    public List<String> getRoutingKeys() {
+        return routingKeys;
+    }
+
+    public void setRoutingKeys(List<String> routingKeys) {
+        this.routingKeys = routingKeys;
+    }
+
+    public String getServiceEndPoint() {
+        return serviceEndPoint;
+    }
+
+    public void setServiceEndPoint(String serviceEndPoint) {
+        this.serviceEndPoint = serviceEndPoint;
+    }
 }

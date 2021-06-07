@@ -5,6 +5,13 @@ import com.google.gson.annotations.SerializedName;
 public class CreateCredentialDefResponse {
 
     @SerializedName("cred_def_id")
-    public String credDefId;
+    private String credDefId;
 
+    public String getCredDefId() {
+        return credDefId;
+    }
+
+    public void setCredDefId(String credDefId) {
+        this.credDefId = credDefId;
+    }
 }

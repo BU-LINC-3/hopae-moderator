@@ -5,6 +5,13 @@ import com.google.gson.annotations.SerializedName;
 public class CreateSchemaResponse {
 
     @SerializedName("schema_id")
-    public String schemaId;
+    private String schemaId;
 
+    public String getSchemaId() {
+        return schemaId;
+    }
+
+    public void setSchemaId(String schemaId) {
+        this.schemaId = schemaId;
+    }
 }
