@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.novang.hopae.moderator.model.bu.LoginInfo;
+import com.novang.hopae.moderator.model.bu.LoginResponse;
 
 import okhttp3.OkHttpClient;
 import okhttp3.ResponseBody;
@@ -18,6 +19,8 @@ public class BUAuthRepository {
     private Retrofit retrofit;
     private BUAuthService service;
 
+    private String sessionId;
+
     public BUAuthRepository() {
         retrofit = new Retrofit.Builder()
                 .client(new OkHttpClient().newBuilder()
@@ -29,22 +32,22 @@ public class BUAuthRepository {
         service = retrofit.create(BUAuthService.class);
     }
 
-    public LiveData<String> requestLogin(int univerGu, String userId, String userPw) {
-        MutableLiveData<String> data = new MutableLiveData<>();
+    public LiveData<LoginResponse> requestLogin(int univerGu, String userId, String userPw) {
+        MutableLiveData<LoginResponse> data = new MutableLiveData<>();
 
         Call<ResponseBody> request = service.requestLogin(univerGu, userId, userPw);
         request.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if (response.code() != 200 || response.body() == null) {
-                    data.postValue("");
-                } else {
-                    data.postValue(response.raw().header("Cookie"));
+                if (response.code() == 200) {
+                    sessionId = response.raw().header("Set-Cookie");
+                    data.postValue(new LoginResponse(response));
                 }
             }
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
+                data.postValue(null);
                 t.printStackTrace();
             }
         });
@@ -52,7 +55,7 @@ public class BUAuthRepository {
         return data;
     }
 
-    public LiveData<LoginInfo> requestLoginInfo(String sessionId) {
+    public LiveData<LoginInfo> requestLoginInfo() {
         MutableLiveData<LoginInfo> data = new MutableLiveData<>();
 
         Call<LoginInfo> request = service.requestLoginInfo(sessionId);
