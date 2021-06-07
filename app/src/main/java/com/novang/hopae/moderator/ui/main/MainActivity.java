@@ -16,7 +16,6 @@ public class MainActivity extends BaseActivity {
     protected void init(@Nullable Bundle savedInstanceState) {
         setContentView(R.layout.activity_main);
         viewModel = new ViewModelProvider(this).get(MainViewModel.class);
-
         super.init(savedInstanceState);
     }
 

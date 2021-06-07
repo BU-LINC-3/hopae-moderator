@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/auth_background"
+    tools:context=".ui.auth.AuthActivity">
+
+    <com.novang.hopae.moderator.view.LoadingView
+        android:id="@+id/loading_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:elevation="10dp"/>
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="200dp"
+        android:gravity="center"
+        android:text="@string/app_name"
+        android:textColor="@color/textLight"
+        android:textStyle="bold"
+        android:textAppearance="@style/Font.ExtendTitle"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"/>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/login_container"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginHorizontal="12dp"
+        android:layout_marginBottom="48dp"
+        app:cardCornerRadius="24dp"
+        app:cardElevation="4dp"
+        app:layout_constraintVertical_weight="3"
+        app:layout_constraintTop_toBottomOf="@id/title"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/login_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="LOGIN"
+                android:textColor="@color/light"
+                android:textStyle="bold"
+                android:textAppearance="@style/Font.DialogTitle"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/login_form_container"/>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/login_form_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="24dp"
+                app:layout_constraintTop_toBottomOf="@id/login_text"
+                app:layout_constraintBottom_toTopOf="@id/login_button">
+
+                <com.google.android.material.button.MaterialButtonToggleGroup
+                    android:id="@+id/login_form_type_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:singleSelection="true"
+                    app:selectionRequired="true"
+                    app:checkedButton="@id/login_form_type_under"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/login_form_type_under"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:padding="0dp"
+                        android:text="학부"
+                        android:textColor="@color/textLight"
+                        android:backgroundTint="@color/normal"
+                        app:cornerRadius="18dp"/>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/login_form_type_post"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:padding="0dp"
+                        android:text="대학원"
+                        android:textColor="@color/textLight"
+                        android:backgroundTint="@color/normal"
+                        app:cornerRadius="18dp"/>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/login_form_type_center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:padding="0dp"
+                        android:text="평생"
+                        android:textColor="@color/textLight"
+                        android:backgroundTint="@color/normal"
+                        app:cornerRadius="18dp"/>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/login_form_type_part"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:padding="0dp"
+                        android:text="시간제"
+                        android:textColor="@color/textLight"
+                        android:backgroundTint="@color/normal"
+                        app:cornerRadius="18dp"/>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/login_form_type_profess"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:padding="0dp"
+                        android:text="교직원"
+                        android:textColor="@color/textLight"
+                        android:backgroundTint="@color/normal"
+                        app:cornerRadius="18dp"/>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/login_form_type_normal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:padding="0dp"
+                        android:text="일반"
+                        android:textColor="@color/textLight"
+                        android:backgroundTint="@color/normal"
+                        app:cornerRadius="18dp"/>
+
+                </com.google.android.material.button.MaterialButtonToggleGroup>
+
+                <TextView
+                    android:id="@+id/login_form_id_header"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:text="ID"
+                    android:textColor="@color/normal"
+                    android:textAppearance="@style/Font.SubHeader"
+                    app:layout_constraintTop_toBottomOf="@id/login_form_type_container"
+                    app:layout_constraintLeft_toLeftOf="parent"/>
+
+                <EditText
+                    android:id="@+id/login_form_id"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/normal"
+                    android:inputType="text"
+                    app:layout_constraintTop_toBottomOf="@id/login_form_id_header"/>
+
+                <TextView
+                    android:id="@+id/login_form_pw_header"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:text="Password"
+                    android:textColor="@color/normal"
+                    android:textAppearance="@style/Font.SubHeader"
+                    app:layout_constraintTop_toBottomOf="@id/login_form_id"
+                    app:layout_constraintLeft_toLeftOf="parent"/>
+
+                <EditText
+                    android:id="@+id/login_form_pw"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/normal"
+                    android:inputType="textPassword"
+                    app:layout_constraintTop_toBottomOf="@id/login_form_pw_header"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/login_button"
+                android:layout_width="match_parent"
+                android:layout_height="64dp"
+                android:layout_marginHorizontal="100dp"
+                android:text="LOGIN"
+                android:textAppearance="@style/Font.TextButton"
+                android:textColor="@color/textLight"
+                android:textStyle="bold"
+                android:backgroundTint="@color/normal"
+                app:cornerRadius="32dp"
+                app:layout_constraintTop_toBottomOf="@id/login_form_container"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
