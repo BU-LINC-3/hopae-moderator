@@ -41,6 +41,7 @@ public interface HopaeService {
 
     @GET("/api/did/issuer/revoke-credential")
     Call<RevokeCredentialResponse> revokeCredential(
+            @Query("credExId") String credExId,
             @Query("credRevId") String credRevId,
             @Query("revRegId") String revRegId
     );

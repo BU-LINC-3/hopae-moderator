@@ -44,7 +44,7 @@ public class HopaeRepository {
 
         request.enqueue(new Callback<ConnRecord>() {
             @Override
-            public void onResponse(Call<ConnRecord> call, Response<ConnRecord> response) {
+            public void onResponse(Call<ConnRecord> call, Response<ConnRecord> response) { // TOOD: 응답 코드 처리 500
                 data.postValue(response.body());
             }
 
@@ -117,10 +117,10 @@ public class HopaeRepository {
         return data;
     }
 
-    public LiveData<RevokeCredentialResponse> revokeCredential(String credRevId, String revRegId) {
+    public LiveData<RevokeCredentialResponse> revokeCredential(String credExId, String credRevId, String revRegId) {
         MutableLiveData<RevokeCredentialResponse> data = new MutableLiveData<>();
 
-        Call<RevokeCredentialResponse> request = service.revokeCredential(credRevId, revRegId);
+        Call<RevokeCredentialResponse> request = service.revokeCredential(credExId, credRevId, revRegId);
 
         request.enqueue(new Callback<RevokeCredentialResponse>() {
             @Override
