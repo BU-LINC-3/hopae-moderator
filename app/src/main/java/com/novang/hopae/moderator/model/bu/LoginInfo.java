@@ -42,7 +42,10 @@ public class LoginInfo implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeByte((byte) (isLogined ? 1 : 0));
-
+        dest.writeString(userId);
+        dest.writeString(univCode);
+        dest.writeString(userName);
+        dest.writeString(deptCode);
     }
 
     public static final Creator<LoginInfo> CREATOR = new Creator<LoginInfo>() {
