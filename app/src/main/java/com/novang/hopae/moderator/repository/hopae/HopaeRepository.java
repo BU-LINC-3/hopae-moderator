@@ -11,6 +11,8 @@ import com.novang.hopae.moderator.model.hopae.IssueCredentialResponse;
 import com.novang.hopae.moderator.model.hopae.RequestProofResponse;
 import com.novang.hopae.moderator.model.hopae.RevokeCredentialResponse;
 
+import java.util.concurrent.TimeUnit;
+
 import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -26,6 +28,7 @@ public class HopaeRepository {
     public HopaeRepository() {
         retrofit = new Retrofit.Builder()
                 .client(new OkHttpClient().newBuilder()
+                        .readTimeout(30, TimeUnit.SECONDS)
                         .build())
                 .baseUrl("http://211.253.228.16:1060")
                 .addConverterFactory(GsonConverterFactory.create())
