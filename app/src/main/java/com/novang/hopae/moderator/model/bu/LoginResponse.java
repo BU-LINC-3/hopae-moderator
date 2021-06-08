@@ -1,5 +1,7 @@
 package com.novang.hopae.moderator.model.bu;
 
+import java.util.List;
+
 import retrofit2.Response;
 
 public class LoginResponse {
@@ -18,12 +20,16 @@ public class LoginResponse {
         if (response.raw().request().method().equals("POST")) {
             state = SUCCESS;
         } else {
-            if (response.raw().request().url().pathSegments().get(2).equals("subview.do")) {
+            List<String> pathSegments = response.raw().request().url().pathSegments();
+            if (pathSegments.contains("subview.do")) {
                 state = CHANGE;
                 redirect = response.raw().request().url().toString();
+                message = "로그인 오류:\n홈페이지에서 비밀번호를 변경해주세요.";
             } else {
                 state = MESSAGE;
-                message = response.raw().request().url().queryParameter("message");
+                message = "로그인 오류:\n";
+                message += response.raw().request().url().queryParameter("message");
+                message = message.replace("<br/>", "\n");
             }
         }
     }

@@ -28,6 +28,7 @@ public class AuthActivity extends BaseActivity {
     private AuthViewModel viewModel;
 
     private SharedPreferences sharedPreferences;
+    private SharedPreferences.Editor sharedPreferencesEditor;
 
     private LoadingView loadingView;
     private MaterialButtonToggleGroup loginFormTypeContainer;
@@ -76,10 +77,10 @@ public class AuthActivity extends BaseActivity {
                 viewModel.requestLoginInfo();
             } else if (loginResponse.getState() == LoginResponse.CHANGE) {
                 loadingView.setVisibility(View.GONE);
-                Toast.makeText(this, "로그인 오류:\n홈페이지에서 비밀번호를 변경해주세요.", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, loginResponse.getMessage(), Toast.LENGTH_LONG).show();
             } else {
                 loadingView.setVisibility(View.GONE);
-                Toast.makeText(this, "로그인 오류:\n".concat(loginResponse.getMessage()), Toast.LENGTH_LONG).show();
+                Toast.makeText(this, loginResponse.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
 
@@ -87,7 +88,9 @@ public class AuthActivity extends BaseActivity {
             loadingView.setVisibility(View.GONE);
 
             if (loginInfo.isLogined()) {
-                sharedPreferences.edit().apply();
+                if (!Objects.equals(sharedPreferencesEditor, null)) {
+                    sharedPreferencesEditor.apply();
+                }
                 start(this, MainActivity.class, "LoginInfo", loginInfo);
                 finish();
             } else {
@@ -109,9 +112,10 @@ public class AuthActivity extends BaseActivity {
             final String id = loginFromId.getText().toString();
             final String pw = loginFromPw.getText().toString();
 
-            sharedPreferences.edit().putInt("univerGu", userType);
-            sharedPreferences.edit().putString("userId", id);
-            sharedPreferences.edit().putString("userPw", pw);
+            sharedPreferencesEditor = sharedPreferences.edit();
+            sharedPreferencesEditor.putInt("univerGu", userType);
+            sharedPreferencesEditor.putString("userId", id);
+            sharedPreferencesEditor.putString("userPw", pw);
 
             viewModel.requestLogin(userType, id, pw);
             loadingView.setVisibility(View.VISIBLE);
