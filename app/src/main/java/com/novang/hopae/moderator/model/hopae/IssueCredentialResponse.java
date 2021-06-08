@@ -5,20 +5,20 @@ import com.google.gson.annotations.SerializedName;
 public class IssueCredentialResponse {
 
     @SerializedName("cred_ex_id")
-    private String schemaId;
+    private String credExId;
 
     @SerializedName("thread_id")
     private String threadId;
 
-    @SerializedName("created_id")
-    private String createdId;
+    @SerializedName("created_at")
+    private String createdAt;
 
-    public String getSchemaId() {
-        return schemaId;
+    public String getCredExId() {
+        return credExId;
     }
 
-    public void setSchemaId(String schemaId) {
-        this.schemaId = schemaId;
+    public void setCredExId(String credExId) {
+        this.credExId = credExId;
     }
 
     public String getThreadId() {
@@ -29,11 +29,11 @@ public class IssueCredentialResponse {
         this.threadId = threadId;
     }
 
-    public String getCreatedId() {
-        return createdId;
+    public String getCreatedAt() {
+        return createdAt;
     }
 
-    public void setCreatedId(String createdId) {
-        this.createdId = createdId;
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
     }
 }
