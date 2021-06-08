@@ -9,4 +9,5 @@
     <color name="textLight">#FFFFFF</color>
     <color name="textAlt">#323232</color>
     <color name="background">#FFFFFF</color>
+    <color name="loading_background">#A0000000</color>
 </resources>
