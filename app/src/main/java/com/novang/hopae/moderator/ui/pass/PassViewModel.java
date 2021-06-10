@@ -24,9 +24,10 @@ public class PassViewModel extends ViewModel {
         public static final int RECEIVE_INVITATION = 1;
         public static final int CREATE_SCHEMA = 2;
         public static final int CREATE_CRED_DEF = 3;
-        public static final int ISSUE_CREDENTIAL = 4;
-        public static final int REVOKE_CREDENTIAL = 5;
-        public static final int VERIFY_PROOF = 6;
+        public static final int CRED_DEF_CREATED = 4;
+        public static final int ISSUE_CREDENTIAL = 5;
+        public static final int REVOKE_CREDENTIAL = 6;
+        public static final int VERIFY_PROOF = 7;
     }
 
     private final HopaeRepository hopaeRepository;
@@ -94,6 +95,7 @@ public class PassViewModel extends ViewModel {
                 status.postValue(STATUS.FAILED);
                 return;
             }
+            status.postValue(STATUS.CRED_DEF_CREATED);
         });
     }
 

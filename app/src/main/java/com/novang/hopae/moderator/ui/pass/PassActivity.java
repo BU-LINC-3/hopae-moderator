@@ -70,6 +70,7 @@ public class PassActivity extends BaseActivity {
     protected void initViews() {
         progressStatus.setText("QR 인식 대기중...");
         passFormContainer.setVisibility(View.GONE);
+        passCancelButton.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -95,7 +96,7 @@ public class PassActivity extends BaseActivity {
                 case PassViewModel.STATUS.RECEIVE_INVITATION :
                     progressStatus.setText("출입증 발급 준비중...");
                     break;
-                case PassViewModel.STATUS.CREATE_CRED_DEF :
+                case PassViewModel.STATUS.CRED_DEF_CREATED :
                     progressStatus.setVisibility(View.GONE);
                     passFormContainer.setVisibility(View.VISIBLE);
                     break;
@@ -114,20 +115,22 @@ public class PassActivity extends BaseActivity {
                     break;
                 case PassViewModel.STATUS.CRED_REVOKED :
                     progressStatus.setText("유효하지 않는 출입증 폐기 완료\n출입증을 새로 발급해주세요.");
-                    MediaPlayer.create(getApplication(), R.raw.invalid_cred_revoke).start();
+                    MediaPlayer.create(this, R.raw.invalid_cred_revoke).start();
+                    passCancelButton.setVisibility(View.GONE);
                     reset();
                     break;
                 case PassViewModel.STATUS.PROOF_TRUE :
                     progressStatus.setText("출입증이 확인되었습니다.");
-                    MediaPlayer.create(getApplication(), R.raw.confirmed).start();
+                    MediaPlayer.create(this, R.raw.cred_confirmed).start();
+                    passCancelButton.setVisibility(View.GONE);
                     reset();
                     break;
                 case PassViewModel.STATUS.PROOF_FALSE :
                     progressStatus.setText("유효하지 않는 출입증입니다.");
-                    MediaPlayer.create(getApplication(), R.raw.invalid_cred).start();
+                    MediaPlayer.create(this, R.raw.invalid_cred).start();
                 case PassViewModel.STATUS.FAILED :
                     progressStatus.setText("요청 실패");
-                    MediaPlayer.create(getApplication(), R.raw.request_failed).start();
+                    MediaPlayer.create(this, R.raw.request_failed).start();
                     reset();
                     break;
             }
@@ -179,7 +182,7 @@ public class PassActivity extends BaseActivity {
 
     private void reset() {
         try {
-            Thread.sleep(3000);
+            Thread.sleep(2000);
         } catch (Exception e) {
             e.printStackTrace();
         }
