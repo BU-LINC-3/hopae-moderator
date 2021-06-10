@@ -3,6 +3,8 @@ package com.novang.hopae.moderator.model.pass;
 import com.google.gson.annotations.SerializedName;
 import com.novang.hopae.moderator.model.hopae.ConnectionInvitation;
 
+import java.util.Objects;
+
 public class ReceivedQRData {
 
     public static final String ISSUE = "issue";
@@ -73,5 +75,14 @@ public class ReceivedQRData {
 
     public void setRegRegId(String revRegId) {
         this.revRegId = revRegId;
+    }
+
+    public boolean isValidForm() {
+        if (Objects.equals(type, ISSUE)) {
+            return !Objects.equals(sessionId, null) && !Objects.equals(invitation, null);
+        } else if (Objects.equals(type, PROOF)) {
+            return !Objects.equals(alias, null) && !Objects.equals(credRevId, null) && !Objects.equals(revRegId, null);
+        }
+        return false;
     }
 }

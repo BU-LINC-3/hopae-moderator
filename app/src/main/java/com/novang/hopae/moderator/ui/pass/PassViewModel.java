@@ -10,18 +10,23 @@ import com.novang.hopae.moderator.model.hopae.ConnectionInvitation;
 import com.novang.hopae.moderator.model.pass.ReceivedQRData;
 import com.novang.hopae.moderator.repository.hopae.HopaeRepository;
 
+import java.util.Objects;
+
 public class PassViewModel extends ViewModel {
 
     public static class STATUS {
+        public static final int PROOF_FALSE = -5;
+        public static final int PROOF_TRUE = -4;
+        public static final int CRED_REVOKED = -3;
+        public static final int CRED_ISSUED = -2;
         public static final int FAILED = -1;
         public static final int NONE = 0;
-        public static final int INV_RECEIVED = 1;
-        public static final int SCHEMA_READY = 2;
-        public static final int CRED_DEF_READY = 3;
-        public static final int CRED_READY = 4;
-        public static final int CRED_REVOKED = 5;
-        public static final int PROOF_READY = 6;
-        public static final int PROOF_FALSE = 7;
+        public static final int RECEIVE_INVITATION = 1;
+        public static final int CREATE_SCHEMA = 2;
+        public static final int CREATE_CRED_DEF = 3;
+        public static final int ISSUE_CREDENTIAL = 4;
+        public static final int REVOKE_CREDENTIAL = 5;
+        public static final int VERIFY_PROOF = 6;
     }
 
     private final HopaeRepository hopaeRepository;
@@ -55,60 +60,64 @@ public class PassViewModel extends ViewModel {
     }
 
     private void receiveInvitation(String sessionId, ConnectionInvitation invitation) {
+        status.postValue(STATUS.RECEIVE_INVITATION);
         hopaeRepository.receiveInvitation(sessionId, invitation).observeForever(connRecord -> {
             if (connRecord == null) {
                 status.postValue(STATUS.FAILED);
                 return;
             }
-            status.postValue(STATUS.INV_RECEIVED);
             requiredData.setAlias(connRecord.getAlias());
             createSchema(requiredData.getSessionId());
         });
     }
 
     private void createSchema(String sessionId) {
+        status.postValue(STATUS.CREATE_SCHEMA);
         hopaeRepository.createSchema(sessionId).observeForever(schemaResponse -> {
             if (schemaResponse == null) {
                 status.postValue(STATUS.FAILED);
                 return;
             }
-            status.postValue(STATUS.SCHEMA_READY);
             createCredentialDef(requiredData.getSessionId());
         });
     }
 
     private void createCredentialDef(String sessionId) {
+        status.postValue(STATUS.CREATE_CRED_DEF);
         hopaeRepository.createCredentialDef(sessionId).observeForever(createCredentialDefResponse -> {
             if (createCredentialDefResponse == null) {
                 status.postValue(STATUS.FAILED);
                 return;
             }
-            status.postValue(STATUS.CRED_DEF_READY);
         });
     }
 
     private void issueCredential(String sessionId, int temp) {
+        status.postValue(STATUS.ISSUE_CREDENTIAL);
         hopaeRepository.issueCredential(sessionId, temp).observeForever(issueCredentialResponse -> {
             if (issueCredentialResponse == null || issueCredentialResponse.getCredExId() == null) {
                 status.postValue(STATUS.FAILED);
                 return;
             }
-            status.postValue(STATUS.CRED_READY);
             credExId = issueCredentialResponse.getCredExId();
+            status.postValue(STATUS.CRED_ISSUED);
         });
     }
 
     private void revokeCredential(String credExId, String credRevId, String revRegId) {
+        status.postValue(STATUS.REVOKE_CREDENTIAL);
         hopaeRepository.revokeCredential(credExId, credRevId, revRegId).observeForever(revokeCredentialResponse -> {
-            if (revokeCredentialResponse == null) {
+            if (Objects.equals(revokeCredentialResponse, null) || !revokeCredentialResponse.isRevoked()) {
                 status.postValue(STATUS.FAILED);
-                return;
+            } else {
+                status.postValue(STATUS.CRED_REVOKED);
             }
-            status.postValue(STATUS.CRED_REVOKED);
         });
     }
 
     private void requestProof(String alias, String moderatorId, Location location) {
+        status.postValue(STATUS.VERIFY_PROOF);
+
         String locationString = "";
         if (location != null) {
             locationString = String.valueOf(location.getLatitude()).concat(" ")
@@ -122,11 +131,12 @@ public class PassViewModel extends ViewModel {
                 return;
             }
 
-            if (!requestProofResponse.isVerified()) {
+            if (requestProofResponse.isVerified()) {
+                status.postValue(STATUS.PROOF_TRUE);
+            } else {
                 status.postValue(STATUS.PROOF_FALSE);
                 revokeCredential(credExId, requiredData.getCredRevId(), requiredData.getRevRegId());
             }
-            status.postValue(STATUS.PROOF_READY);
         });
     }
 

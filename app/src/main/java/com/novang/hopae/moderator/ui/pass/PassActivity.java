@@ -1,6 +1,8 @@
 package com.novang.hopae.moderator.ui.pass;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -14,12 +16,17 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonSyntaxException;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.novang.hopae.moderator.R;
 import com.novang.hopae.moderator.model.bu.LoginInfo;
 import com.novang.hopae.moderator.model.pass.ReceivedQRData;
 import com.novang.hopae.moderator.ui.base.BaseActivity;
+
+import java.util.Objects;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class PassActivity extends BaseActivity {
 
@@ -69,7 +76,7 @@ public class PassActivity extends BaseActivity {
     @Override
     protected void initObservers() {
         receivedQRData.observe(this, data -> {
-            if (data != null) {
+            if (!Objects.equals(data, null)) {
                 if (data.getType().equals(ReceivedQRData.ISSUE)) {
                     progressStatus.setText("출입증 발급 준비중...");
                     viewModel.prepare(data);
@@ -81,29 +88,45 @@ public class PassActivity extends BaseActivity {
                 }
             }
             Toast.makeText(this, "QR 코드 인식 오류\nQR 코드를 다시 인식시켜주세요.", Toast.LENGTH_LONG).show();
-            start(this, PassActivity.class);
+            start(this, PassActivity.class, "ModeratorInfo", moderatorInfo);
             finish();
         });
 
         viewModel.getStatus().observe(this, status -> {
             switch (status) {
-                case PassViewModel.STATUS.CRED_DEF_READY :
+                case PassViewModel.STATUS.RECEIVE_INVITATION :
+                    progressStatus.setText("출입증 발급 준비중...");
+                    break;
+                case PassViewModel.STATUS.CREATE_CRED_DEF :
                     progressStatus.setVisibility(View.GONE);
                     passFormContainer.setVisibility(View.VISIBLE);
+                    break;
+                case PassViewModel.STATUS.ISSUE_CREDENTIAL :
                     progressStatus.setText("출입증 발급중...");
                     break;
-                case PassViewModel.STATUS.CRED_READY :
-                    progressStatus.setText("출입증 확인중...");
+                case PassViewModel.STATUS.CRED_ISSUED :
+                    progressStatus.setText("출입증 발급 완료");
                     viewModel.proof(moderatorInfo.getUserId(), null);
                     break;
+                case PassViewModel.STATUS.VERIFY_PROOF :
+                    progressStatus.setText("출입증 확인중...");
+                    break;
+                case PassViewModel.STATUS.REVOKE_CREDENTIAL :
+                    progressStatus.setText("유효하지 않는 출입증 폐기중...");
+                    break;
                 case PassViewModel.STATUS.CRED_REVOKED :
-                    progressStatus.setText("출입증 폐기 완료");
+                    progressStatus.setText("유효하지 않는 출입증 폐기 완료\n출입증을 새로 발급해주세요.");
+                    delayedRelaunch(this, 4000);
+                    break;
+                case PassViewModel.STATUS.PROOF_TRUE :
+                    progressStatus.setText("출입증이 확인되었습니다.");
+                    delayedRelaunch(this, 2000);
                     break;
                 case PassViewModel.STATUS.PROOF_FALSE :
-                    progressStatus.setText("유효하지 않는 출입증");
-                    break;
-                case PassViewModel.STATUS.PROOF_READY :
-                    progressStatus.setText("출입증 확인 완료");
+                    progressStatus.setText("유효하지 않는 출입증입니다.");
+                case PassViewModel.STATUS.FAILED :
+                    progressStatus.setText("요청 실패");
+                    delayedRelaunch(this, 2000);
                     break;
             }
         });
@@ -127,16 +150,38 @@ public class PassActivity extends BaseActivity {
         if (resultCode == RESULT_OK && requestCode == IntentIntegrator.REQUEST_CODE) {
             IntentResult intentResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
 
-            if (intentResult != null) {
-                if (intentResult.getContents() != null) {
-                    receivedQRData.postValue(new GsonBuilder().create()
-                            .fromJson(intentResult.getContents(), ReceivedQRData.class));
+            if (!Objects.equals(intentResult, null)) {
+                if (!Objects.equals(intentResult.getContents(), null)) {
+                    ReceivedQRData qrData = null;
+                    try { // TODO: JWT
+                        qrData = new GsonBuilder().create()
+                                .fromJson(intentResult.getContents(), ReceivedQRData.class);
+                    } catch(Exception e) {
+                        e.printStackTrace();
+                    }
+                    if (!Objects.equals(qrData, null) && qrData.isValidForm()) {
+                        receivedQRData.postValue(qrData);
+                        return;
+                    } else {
+                        Toast.makeText(this, "유효하지 않는 QR 코드입니다.", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
+            intentIntegrator.initiateScan();
         } else if (resultCode == RESULT_CANCELED && requestCode == IntentIntegrator.REQUEST_CODE) {
             finish();
         } else {
             super.onActivityResult(requestCode, resultCode, data);
         }
+    }
+
+    private void delayedRelaunch(Activity activity, long time) {
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                start(activity, PassActivity.class, "ModeratorInfo", moderatorInfo);
+                finish();
+            }
+        }, time);
     }
 }
