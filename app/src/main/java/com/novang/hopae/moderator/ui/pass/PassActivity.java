@@ -1,6 +1,5 @@
 package com.novang.hopae.moderator.ui.pass;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Bundle;
@@ -16,7 +15,6 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonSyntaxException;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.novang.hopae.moderator.R;
@@ -55,6 +53,12 @@ public class PassActivity extends BaseActivity {
     @Override
     protected void initReferences() {
         intentIntegrator = new IntentIntegrator(this);
+        intentIntegrator.setDesiredBarcodeFormats(IntentIntegrator.QR_CODE);
+        intentIntegrator.setPrompt("QR 코드를 인식시켜주세요.");
+        intentIntegrator.setCameraId(1);
+        intentIntegrator.setBeepEnabled(true);
+        intentIntegrator.setOrientationLocked(true);
+        intentIntegrator.setCaptureActivity(CaptureActivity.class);
         passFormContainer = findViewById(R.id.pass_form_container);
         progressStatus = findViewById(R.id.progress_status);
         passFormTemp = findViewById(R.id.pass_form_temp);
@@ -64,12 +68,7 @@ public class PassActivity extends BaseActivity {
 
     @Override
     protected void initViews() {
-        intentIntegrator.setDesiredBarcodeFormats(IntentIntegrator.QR_CODE);
-        intentIntegrator.setPrompt("QR 코드를 인식시켜주세요.");
-        intentIntegrator.setCameraId(1);
-        intentIntegrator.setBeepEnabled(true);
-        intentIntegrator.setOrientationLocked(true);
-        intentIntegrator.setCaptureActivity(CaptureActivity.class);
+        progressStatus.setText("QR 인식 대기중...");
         passFormContainer.setVisibility(View.GONE);
     }
 
@@ -88,8 +87,7 @@ public class PassActivity extends BaseActivity {
                 }
             }
             Toast.makeText(this, "QR 코드 인식 오류\nQR 코드를 다시 인식시켜주세요.", Toast.LENGTH_LONG).show();
-            start(this, PassActivity.class, "ModeratorInfo", moderatorInfo);
-            finish();
+            reset();
         });
 
         viewModel.getStatus().observe(this, status -> {
@@ -116,20 +114,21 @@ public class PassActivity extends BaseActivity {
                     break;
                 case PassViewModel.STATUS.CRED_REVOKED :
                     progressStatus.setText("유효하지 않는 출입증 폐기 완료\n출입증을 새로 발급해주세요.");
-                    delayedRelaunch(this, 4000);
+                    MediaPlayer.create(getApplication(), R.raw.invalid_cred_revoke).start();
+                    reset();
                     break;
                 case PassViewModel.STATUS.PROOF_TRUE :
                     progressStatus.setText("출입증이 확인되었습니다.");
-                    MediaPlayer.create(this, R.raw.confirmed).start();
-                    delayedRelaunch(this, 2000);
+                    MediaPlayer.create(getApplication(), R.raw.confirmed).start();
+                    reset();
                     break;
                 case PassViewModel.STATUS.PROOF_FALSE :
                     progressStatus.setText("유효하지 않는 출입증입니다.");
-                    MediaPlayer.create(this, R.raw.invalid_cred).start();
+                    MediaPlayer.create(getApplication(), R.raw.invalid_cred).start();
                 case PassViewModel.STATUS.FAILED :
                     progressStatus.setText("요청 실패");
-                    MediaPlayer.create(this, R.raw.request_failed).start();
-                    delayedRelaunch(this, 2000);
+                    MediaPlayer.create(getApplication(), R.raw.request_failed).start();
+                    reset();
                     break;
             }
         });
@@ -178,13 +177,14 @@ public class PassActivity extends BaseActivity {
         }
     }
 
-    private void delayedRelaunch(Activity activity, long time) {
-        new Timer().schedule(new TimerTask() {
-            @Override
-            public void run() {
-                start(activity, PassActivity.class, "ModeratorInfo", moderatorInfo);
-                finish();
-            }
-        }, time);
+    private void reset() {
+        try {
+            Thread.sleep(3000);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        initViews();
+        viewModel.reset();
+        intentIntegrator.initiateScan();
     }
 }

@@ -41,6 +41,11 @@ public class PassViewModel extends ViewModel {
 
     }
 
+    public void reset() {
+        requiredData = null;
+        credExId = null;
+    }
+
     public void prepare(ReceivedQRData receivedQRData) {
         this.requiredData = receivedQRData;
         receiveInvitation(receivedQRData.getSessionId(), receivedQRData.getInvitation());
