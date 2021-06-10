@@ -6,11 +6,8 @@ Android 용 호패 관리자 클라이언트입니다.<br/>
 SDK: API 24^<br/>
 IDE: Android Studio 4.1.2<br/>
 
-## 호패 관리자 클라이언트 Sequence Diagram
-<img src="img/diagram1.png"/>
-
 ## Summary
-[Google Slide]()
+[Google Slide](https://docs.google.com/presentation/d/1hxOBRRBrWIrjKF4EnZRzaZaGaHRS54hI6fGh_IULV1I/edit?usp=sharing)
 <br/>
 
 ## QRCode 정보
