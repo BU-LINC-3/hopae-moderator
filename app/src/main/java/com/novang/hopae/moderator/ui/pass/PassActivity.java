@@ -120,12 +120,15 @@ public class PassActivity extends BaseActivity {
                     break;
                 case PassViewModel.STATUS.PROOF_TRUE :
                     progressStatus.setText("출입증이 확인되었습니다.");
+                    MediaPlayer.create(this, R.raw.confirmed).start();
                     delayedRelaunch(this, 2000);
                     break;
                 case PassViewModel.STATUS.PROOF_FALSE :
                     progressStatus.setText("유효하지 않는 출입증입니다.");
+                    MediaPlayer.create(this, R.raw.invalid_cred).start();
                 case PassViewModel.STATUS.FAILED :
                     progressStatus.setText("요청 실패");
+                    MediaPlayer.create(this, R.raw.request_failed).start();
                     delayedRelaunch(this, 2000);
                     break;
             }
