@@ -55,7 +55,7 @@ public class PassActivity extends BaseActivity {
         intentIntegrator = new IntentIntegrator(this);
         intentIntegrator.setDesiredBarcodeFormats(IntentIntegrator.QR_CODE);
         intentIntegrator.setPrompt("QR 코드를 인식시켜주세요.");
-        intentIntegrator.setCameraId(1);
+        intentIntegrator.setCameraId(0);
         intentIntegrator.setBeepEnabled(true);
         intentIntegrator.setOrientationLocked(true);
         intentIntegrator.setCaptureActivity(CaptureActivity.class);

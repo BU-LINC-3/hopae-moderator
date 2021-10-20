@@ -30,7 +30,7 @@ public class HopaeRepository {
                 .client(new OkHttpClient().newBuilder()
                         .readTimeout(30, TimeUnit.SECONDS)
                         .build())
-                .baseUrl("http://211.253.228.16:1060")
+                .baseUrl("http://192.168.137.1:8080")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
