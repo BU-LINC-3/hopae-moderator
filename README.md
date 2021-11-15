@@ -7,7 +7,7 @@ SDK: API 24^<br/>
 IDE: Android Studio 4.1.2<br/>
 
 ## Summary
-[Google Slide](https://docs.google.com/presentation/d/1hxOBRRBrWIrjKF4EnZRzaZaGaHRS54hI6fGh_IULV1I/edit?usp=sharing)
+[Google Slide](https://docs.google.com/presentation/d/15ONSqXMXpYghQoSaz3wQkiBBw3FHc1qoB5S0_q1e9cw/edit?usp=sharing)
 <br/>
 
 ## QRCode 정보
